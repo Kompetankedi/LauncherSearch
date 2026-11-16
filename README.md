@@ -20,37 +20,50 @@ This module hooks `DefaultSearchAdapterProvider.performGoogleSearch` via LSPosed
 * **LSPosed** / **Vector Framework** / **Zygisk**
 * crDroid 12.x / Launcher3 (Android 14, 15, 16)
 
+## ✅ Tested Devices
+* **Redmi Note 12 Pro 4G** (crDroid 12.13)
+* **Poco F6** (LunarisAOSP 3.12)
+
 ---
 
 ## 🚀 Building & Installation
 
-### Option 1: Build with Gradle
+### Step 1: Build with Gradle
 ```bash
 ./gradlew assembleRelease
-```
-Or for debug:
-```bash
+# Or for debug:
 ./gradlew assembleDebug
 ```
 The compiled APK will be at:
 `app/build/outputs/apk/debug/app-debug.apk`
 
-### Option 2: Install via ADB
+### Step 2: Install APK
 ```bash
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Option 3: Enable Module in LSPosed / Vector CLI
+### Step 3: Enable in LSPosed / Vector
+1. Open **LSPosed** / **Vector Manager** (or use CLI).
+2. Enable the **Launcher Search Enter Fix** module.
+3. Ensure **Launcher3** (`com.android.launcher3`) is selected in the scope.
+
+CLI method:
 ```bash
 # Enable module
 /data/adb/lspd/cli modules enable com.crdroid.launchersearch
 
 # Set scope to Launcher3
 /data/adb/lspd/cli scope add com.crdroid.launchersearch com.android.launcher3/0
-
-# Restart Launcher3
-am force-stop com.android.launcher3
 ```
+
+### Step 4: ⚠️ Restart Launcher3 (Mandatory)
+> [!IMPORTANT]
+> Xposed hooks into `com.android.launcher3` only load when the process starts. You **MUST** force-stop Launcher3 after installing or enabling the module for the hook to take effect:
+>
+> ```bash
+> adb shell am force-stop com.android.launcher3
+> ```
+> *Alternatively, go to **Settings → Apps → All Apps → Launcher3** and tap **Force Stop**.*
 
 ---
 
